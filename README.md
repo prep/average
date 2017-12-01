@@ -1,6 +1,7 @@
 average
 [![TravisCI](https://travis-ci.org/prep/average.svg?branch=master)](https://travis-ci.org/prep/average.svg?branch=master)
 [![GoDoc](https://godoc.org/github.com/prep/average?status.svg)](https://godoc.org/github.com/prep/average)
+[![Go Report Card](https://goreportcard.com/badge/github.com/prep/average)](https://goreportcard.com/report/github.com/prep/average)
 =======
 This stupidly named Go package contains a single struct that is used to implement counters on a sliding time window.
 
