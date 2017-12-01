@@ -1,5 +1,5 @@
 average
-[![Godoc][GodocV2SVG]][GodocV2URL]
+[![GoDoc](https://godoc.org/github.com/prep/average?status.svg)](https://godoc.org/github.com/prep/average)
 =======
 This stupidly named Go package contains a single struct that is used to implement counters on a sliding time window.
 
