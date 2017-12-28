@@ -5,7 +5,8 @@ average
 =======
 This stupidly named Go package contains a single struct that is used to implement counters on a sliding time window.
 
-#### Usage
+Usage
+-----
 ```go
 
 import (
