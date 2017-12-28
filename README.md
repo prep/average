@@ -38,4 +38,4 @@ func main() {
 
 License
 -------
-This software is created for MessageBird B.V. and licensed under [The ISC License](http://opensource.org/licenses/ISC). Copyright (c) 2017, Maurice Nonnekes <maurice@messagebird.com>.
+This software is created for MessageBird B.V. and distributed under the BSD-style license found in the LICENSE file.
