@@ -61,10 +61,10 @@ func (sw *SlidingWindow) shifter() {
 		select {
 		case <-ticker.C:
 			sw.Lock()
-			if sw.pos = sw.pos + 1; sw.pos > len(sw.samples) {
+			if sw.pos = sw.pos + 1; sw.pos >= len(sw.samples) {
 				sw.pos = 0
-				sw.samples[sw.pos] = 0
 			}
+			sw.samples[sw.pos] = 0
 			if sw.size < len(sw.samples) {
 				sw.size++
 			}
