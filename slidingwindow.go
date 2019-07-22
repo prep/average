@@ -93,6 +93,16 @@ func (sw *SlidingWindow) Average(window time.Duration) float64 {
 	return float64(total) / float64(sampleCount)
 }
 
+// RangeAverage returns the unweighted mean of the window
+// from start to end
+func (sw *SlidingWindow) RangeAverage(start, end time.Duration) float64 {
+	total, sampleCount := sw.RangeTotal(start, end)
+	if sampleCount == 0 {
+		return 0
+	}
+	return float64(total) / float64(sampleCount)
+}
+
 // Reset the samples in this sliding time window.
 func (sw *SlidingWindow) Reset() {
 	sw.Lock()
@@ -138,4 +148,31 @@ func (sw *SlidingWindow) Total(window time.Duration) (int64, int) {
 	}
 
 	return total, sampleCount
+}
+
+// RangeTotal returns the sum of all values from start to end, as well as
+// the number of samples.
+func (sw *SlidingWindow) RangeTotal(start, end time.Duration) (int64, int) {
+	  if start > end {
+                  start = end
+          }
+	  window := end - start
+	  sampleCount := int(window / sw.granularity)
+          if sampleCount > sw.size {
+                  sampleCount = sw.size
+          }
+	  sw.RLock()
+          defer sw.RUnlock()
+
+          var total int64
+	  endPos := sw.pos - sw.size + int( end / sw.granularity)
+          for i := 1; i <= sampleCount; i++ {
+                  pos := endPos - i
+		  if pos < 0 {
+                          pos += len(sw.samples)
+                  }
+
+                  total += sw.samples[pos]
+          }
+	  return total, sampleCount
 }
