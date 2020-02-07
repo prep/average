@@ -56,6 +56,7 @@ func New(window, granularity time.Duration) (*SlidingWindow, error) {
 
 func (sw *SlidingWindow) shifter() {
 	ticker := time.NewTicker(sw.granularity)
+	defer ticker.Stop()
 
 	for {
 		select {
