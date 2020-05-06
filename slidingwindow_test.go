@@ -75,6 +75,29 @@ func TestAverage(t *testing.T) {
 	}
 }
 
+func TestRangeAverage(t *testing.T) {
+        sw := &SlidingWindow{
+                window:      10 * time.Second,
+                granularity: time.Second,
+                samples:     []int64{1, 2, 5, 0, 0, 0, 0, 0, 4, 0},
+                pos:         2,
+                size:        10,
+        }
+
+        if v := sw.RangeAverage(0, 0); v != 0 {
+                t.Errorf("expected the average with a window of 0 seconds be 0, not %f", v)
+        }
+        if v := sw.RangeAverage(9 * time.Second, 10 * time.Second); v != 2 {
+                t.Errorf("expected the average from second 9 to 10 to be 2, not %f", v)
+        }
+        if v := sw.RangeAverage(8 * time.Second, 10 * time.Second); v != 1.5 {
+                t.Errorf("expected the average from second 8 to 10 to be 1.5, not %f", v)
+        }
+        if v := sw.RangeAverage(4 * time.Second, 9 * time.Second); v != 1 {
+                t.Errorf("expected the average from second 4 to 9 to be 1, not %f", v)
+        }
+}
+
 func TestReset(t *testing.T) {
 	sw := MustNew(2*time.Second, time.Second)
 	defer sw.Stop()
@@ -130,4 +153,45 @@ func TestTotal(t *testing.T) {
 	if v, _ := sw.Total(20 * time.Second); v != 12 {
 		t.Errorf("expected the total over the last 10 seconds to be 12, not %d", v)
 	}
+}
+
+func TestRangeTotal(t *testing.T) {
+          sw := &SlidingWindow{
+                  window:      10 * time.Second,
+                  granularity: time.Second,
+                  samples:     []int64{1, 2, 5, 0, 0, 0, 0, 0, 4, 8},
+                  pos:         10,
+                  size:        10,
+          }
+
+          if v, _ := sw.RangeTotal(time.Second, 2 * time.Second); v != 2 {
+                  t.Errorf("expected the total from second 1 to 2 to be 2, not %d", v)
+          }
+	  if v, _ := sw.RangeTotal(time.Second, 3 * time.Second); v != 7 {
+                  t.Errorf("expected the total from second 1 to 3 to be 7, not %d", v)
+          }
+	  if v, _ := sw.RangeTotal(time.Second * 3, time.Second * 8); v != 0 {
+                  t.Errorf("expected the total from second 3 to 8 to be 0, not %d", v)
+          }
+	  if v, _ := sw.RangeTotal(0, time.Second * 2); v != 3 {
+                  t.Errorf("expected the total from second 0 to 2 to be 3, not %d", v)
+          }
+	  if v, _ := sw.RangeTotal(9 * time.Second, 10 * time.Second); v != 8 {
+                  t.Errorf("expected the total from second 9 to 10 to be 8, not %d", v)
+          }
+	
+	  sw = &SlidingWindow{
+                  window:      10 * time.Second,
+                  granularity: time.Second,
+                  samples:     []int64{1, 2, 5, 0, 0, 0, 0, 0, 4, 8},
+                  pos:         2,
+                  size:        10,
+          }
+
+	  if v, _ := sw.RangeTotal(9 * time.Second, 10 * time.Second); v != 2 {
+                  t.Errorf("expected the total from second 9 to 10 to be 2, not %d", v)
+          }
+	  if v, _ := sw.RangeTotal(7 * time.Second, 9 * time.Second); v != 9 {
+                  t.Errorf("expected the total from second 7 to 9 to be 9, not %d", v)
+          }
 }
