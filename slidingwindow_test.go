@@ -131,3 +131,12 @@ func TestTotal(t *testing.T) {
 		t.Errorf("expected the total over the last 10 seconds to be 12, not %d", v)
 	}
 }
+
+func TestTotalFromNew(t *testing.T) {
+	sw, _ := New(time.Minute, 15*time.Second)
+
+	sw.Add(15)
+	if v, _ := sw.Total(time.Minute); v != 15 {
+		t.Errorf("expected total to be 15, but got %d", v)
+	}
+}
