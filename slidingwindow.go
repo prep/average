@@ -48,6 +48,7 @@ func New(window, granularity time.Duration) (*SlidingWindow, error) {
 		granularity: granularity,
 		samples:     make([]int64, int(window/granularity)),
 		stopC:       make(chan struct{}),
+		size:        1,
 	}
 
 	go sw.shifter()
@@ -132,7 +133,7 @@ func (sw *SlidingWindow) Total(window time.Duration) (int64, int) {
 	for i := 1; i <= sampleCount; i++ {
 		pos := sw.pos - i
 		if pos < 0 {
-			pos += len(sw.samples)
+			pos += sw.size
 		}
 
 		total += sw.samples[pos]

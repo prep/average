@@ -17,23 +17,24 @@ import (
 
 func main() {
     // Create a SlidingWindow that has a window of 15 minutes, with a
-    // granulity of 1 minute.
-    sw := average.MustNew(15 * time.Minute, time.Minute)
+    // granularity of 1 minute.
+    sw := average.MustNew(15*time.Second, time.Second)
     defer sw.Stop()
 
-    // Do some work.
     sw.Add(15)
     // Do some more work.
+    time.Sleep(time.Second)
     sw.Add(22)
     // Do even more work.
+    time.Sleep(2 * time.Second)
     sw.Add(22)
 
-    fmt.Printf("Average of last  1m: %f\n", sw.Average(time.Minute)
-    fmt.Printf("Average of last  5m: %f\n", sw.Average(5 * time.Minute)
-    fmt.Printf("Average of last 15m: %f\n\n", sw.Average(15 * time.Minute)
+    fmt.Printf("Average of last 1s: %f\n", sw.Average(time.Second))
+    fmt.Printf("Average of last 2s: %f\n", sw.Average(2*time.Second))
+    fmt.Printf("Average of last 15s: %f\n\n", sw.Average(15*time.Second))
 
-    total, numSamples := sw.Total(15 * time.Minute)
-    fmt.Printf("Counter has a total of %d over %d samples", total, numSamples)
+    total, numSamples := sw.Total(15 * time.Second)
+    fmt.Printf("Counter has a total of %d over %d samples\n", total, numSamples)
 }
 ```
 
